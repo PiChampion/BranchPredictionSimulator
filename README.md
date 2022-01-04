@@ -1,10 +1,11 @@
 # Branch Prediction Simulator
 
-The project was completed as part of ECE 563 (Microprocessor Architecture) at NC State. In this project, I implemented a branch prediction simulator in C++ and used it to evaluate different configurations of branch predictors.
+The project was completed as part of ECE 563 (Microprocessor Architecture) at NC State. In this project, I implemented a branch prediction simulator in C++ and used it to evaluate different configurations of branch predictors. The simulator is able to simulate a bimodal pranch predictor, gshare branch predictor, and hybrid branch predictor. 
 
-The simulator is able to simulate a bimodal pranch predictor, gshare branch predictor, and hybrid branch predictor. 
 The bimodal branch predictor contains a prediction table which contains entries of 2-bit counters and is initialized to 2 ("weakly taken") when the simulation begins. The index into the prediction table is simply the branch's PC. 
+
 For the gshare branch predictor, the index is based on both the branch’s PC and the global branch history register. The global branch history register is initialized to all zeroes at the beginning of the simulation. There is also the same prediction table consisting of 2-bit counters. 
+
 The hybrid predictor selects between a bimodal and gshare predictor using a chooser table of 2-bit counters. All counters in the chooser table are initialized to 1 at the beginning of the simulation. If both the bimodal and gshare predictors were incorrect or both correct, no change is made in the chooser counter. If the bimodal predictor was incorrect and gshare predictor was correct, the chooser counter increments. If the bimodal predictor was correct and gshare predictor was incorrect, the chooser counter decrements.
 
 ### Command Line Specifications:
