@@ -1,31 +1,18 @@
 # Branch Prediction Simulator
 
-The project was completed as part of ECE 563 (Microprocessor Architecture) at NC State. In this project, I implemented a flexible cache and memory hierarchy simulator in C++ and used it to compare the performance, area, and energy of different memory hierarchy configurations.
+The project was completed as part of ECE 563 (Microprocessor Architecture) at NC State. In this project, I implemented a branch prediction simulator in C++ and used it to evaluate different configurations of branch predictors.
 
-The simulator is able to simulate any combination of an L1 Cache, L1 Victim Cache, and L2 Cache. Command-line parameters which govern the specifics of the memory being simulated include block size, L1 cache size, L1 cache associativity, number of victim cache blocks, L2 cache size, and L2 cache associativity.
+The simulator is able to simulate a bimodal pranch predictor, gshare branch predictor, and hybrid branch predictor. The bimodal branch predictor contains a prediction table which contains entries of 2-bit counters and is initialized to 2 ("weakly taken") when the simulation begins. The index into the prediction table is simply the branch's PC. For the gshare branch predictor, the index is based on both the branch’s PC and the global branch history register. The global branch history register is initialized to all zeroes at the beginning of the simulation. There is also the same prediction table consisting of 2-bit counters. The hybrid predictor selects between a bimodal and gshare predictor using a chooser table of 2-bit counters. All counters in the chooser table are initialized to 1 at the beginning of the simulation. If both the bimodal and gshare predictors were incorrect or both correct, no change is made in the chooser counter. If the bimodal predictor was incorrect and gshare predictor was correct, the chooser counter increments. If the bimodal predictor was correct and gshare predictor was incorrect, the chooser counter decrements. For all of the predictors, the counters in the prediction table saturate at 0 and 3. 
 
-### Memory Hierarchy Specifications:
-* Replacement Policy: LRU
-* Write policy: write-back + write-allocate
-* Victim cache associativity: Fully associative
+### Command Line Specifications:
+* To simulate a bimodal predictor: sim bimodal <M2> <tracefile>, where M2 is the number of PC bits used to index the bimodal table.
+* To simulate a gshare predictor: sim gshare <M1> <N> <tracefile>, where M1 and N are the number of PC bits and global branch history register bits used to index the gshare table, respectively.
+* To simulate a hybrid predictor: sim hybrid <K> <M1> <N> <M2> <tracefile>, where K is the number of PC bits used to index the chooser table, M1 and N are the number of PC bits and global branch history register bits used to index the gshare table (respectively), and M2 is the number of PC bits used to index the bimodal table.
 
 ### The simulator outputs the following:
-* Memory hierarchy configuration and trace filename.
-* The final contents of all caches.
+* The simulator command.
 * The following measurements:
-  * number of L1 reads
-  * number of L1 read misses
-  * number of L1 writes
-  * number of L1 write misses
-  * number of swap requests from L1 to its VC
-  * swap request rate
-  * number of swaps between L1 and its V
-  * combined L1+VC miss rate
-  * number of writebacks from L1 or its VC (if enabled), to next level
-  * number of L2 reads
-  * number of L2 read misses
-  * number of L2 writes
-  * number of L2 write misses
-  * L2 miss rate 
-  * number of writebacks from L2 to memory
-  * total memory traffic = number of blocks transferred to/from memory
+  * number of predictions
+  * number of branch mispredictions
+  * branch misprediction rate
+ * The final contents of the branch predictor.
